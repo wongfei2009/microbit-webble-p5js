@@ -67,7 +67,7 @@ xpos=width/2;
 ypos=height/2
 
 // Here we add the microbit
-microBit=new uBit();
+microBit = new uBitWebBluetooth();
 
 // Here we create the pairing interface
 button = createButton('connect microBit');

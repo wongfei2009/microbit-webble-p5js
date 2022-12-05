@@ -25,11 +25,15 @@ function preload() {
 function setup() {
   canvas = createCanvas(710, 400, WEBGL);
 
-  microBit=new uBit();
+  microBit=new uBitWebBluetooth();
 
-  button = createButton('connect microBit');
-  button.mousePressed(searchDevice); // attach button listener
-
+  //define connect and disconnect buttons
+  const connectButton = createButton("Connect");
+  connectButton.mousePressed(() => {microBit.searchDevice()});
+ 
+  // connectButton.mousePressed(microBit.searchDevice);
+  const disconnectButton = createButton("Disconnect");
+  disconnectButton.mousePressed(() => {microBit.disconnectDevice()});
   microBit.setButtonACallback(function(){
     console.log("buttonA pressed");
     microBit.writeMatrixIcon(iconLeft);

@@ -16,8 +16,8 @@ var iconRight = [
   ['1', '0', '0', '0', '1']
 ]
 
-microBit=new uBit();
-
+microBit=new uBitWebBluetooth();
+console.log("mbit",microBit);
 microBit.onConnect(function(){
   console.log("connected");
 

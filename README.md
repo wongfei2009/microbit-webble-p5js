@@ -4,11 +4,22 @@ A javascript library to interact with [BBC micro:bit](http://microbit.org/) usin
 
 ## Usage
 
-To use the library, download and upload [this firmware](https://drive.google.com/uc?id=0B2Ud_NaMFsQSdm1BMVMtN3F4a3c&export=download) on your BBC micro:bit board.
+To use the library, download and upload [this firmware](https://makecode.microbit.org/_7Xr7kyeAsaV9) on your BBC micro:bit board.
 
 The firmware was produced by [bittysoftware](http://www.bittysoftware.com/downloads.html).
 
 Keep in mind that web bluetooth API are still experimental and your OS and browser might not support the feature. Read more about this [here](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web).
+
+Please refer to the following table for the supported browsers. 
+
+| Browser | WebUSB  |　WebBLE|
+|---|---|---|
+| Chrome(Win/Mac) / Edge  | ○ | ○|
+| Safari | X |　X|
+| Firefox |X　|X|
+| Chrome on Android | ○ | ○|
+| Safari on iOS| X |　X|
+| Chromium on Raspberry PI | ○ | ○|
 
 This Library allows you to read and write the values of all the BLEcharacteristic exposed by the microBit board using simplified API's.
 
@@ -18,7 +29,7 @@ The example folder provided contains several examples for interacting with the d
 
 ## Constructor
 
-- `microBit=new uBit()`
+- `microBit=new uBitWebBluetooth()`
 
 ## Properties
 
@@ -30,14 +41,17 @@ The example folder provided contains several examples for interacting with the d
 - `microBit.searchDevice()`
 
   Search for ble devices in range.
-
+　<br><br>example:
+  ```javascript
+  connectButton.mousePressed(() => {microBit.searchDevice()});
+  ```
 
 - `microBit.setButtonACallback(callbackFunction)`
 
   Register a callback function to be invoked when Button A is pressed.
 
   example:
-  ```
+  ```js
   microBit.setButtonACallback(function(){
     console.log("buttonA pressed");
   });
@@ -48,7 +62,7 @@ The example folder provided contains several examples for interacting with the d
   Register a callback function to be invoked when Button B is pressed.
 
   example:
-  ```
+  ```js
   microBit.setButtonBCallback(function(){
     console.log("buttonB pressed");
   });
@@ -59,7 +73,7 @@ The example folder provided contains several examples for interacting with the d
   Register a callback function invoked when the microBit connects
 
   example:
-  ```
+  ```js
   microBit.onConnect(function(){
     console.log("connected");
   });
@@ -70,7 +84,7 @@ The example folder provided contains several examples for interacting with the d
   Register a callback function invoked when the microBit disconnects
 
   example:
-  ```
+  ```js
   microBit.onDisconnect(function(){
     console.log("disconnected");
   });
@@ -81,12 +95,30 @@ The example folder provided contains several examples for interacting with the d
   Register a callback function invoked every time the value of characteristic changes and it is notified by the device.
 
   example:
-  ```
+  ```js
   microBit.onBleNotify(function(){
     document.getElementById("buttonA").innerHTML=microBit.getButtonA();
   }
   ```
 
+- `microBit.setUARTCallback(callbackFunction)`
+  Register a callback function to be invoked when UART data is received.
+
+  example:
+  ```js
+  microBit.setUARTCallback(function(data){
+    console.log("UART received",data);
+    receivedText = data;
+  });
+  ```
+
+- `microBit.writeUARTData(text)`
+  
+  example:
+  ```js
+  var messageText = "Hello!";
+  microBit.writeUARTData(messageText);
+  ```
 - `microBit.writeMatrixIcon(icon)`
 
   Updates the led matrix on the microbit.
@@ -95,7 +127,7 @@ The example folder provided contains several examples for interacting with the d
   1=led on;
 
   example:
-  ```
+  ```js
   var ledMatrix = [
     ['0', '0', '0', '0', '0'],
     ['0', '1', '0', '1', '0'],
@@ -113,7 +145,7 @@ The example folder provided contains several examples for interacting with the d
   Updates the led matrix of the microbit with a scrolling text.
 
   example:
-  ```
+  ```js
   microBit.writeMatrixText("ciao microBit")
   ```
 
@@ -121,7 +153,7 @@ The example folder provided contains several examples for interacting with the d
 
   set the speed of the scrolling text on the matrix
   example:
-  ```
+  ```js
   microBit.writeMatrixTextSpeed(10)
   ```
 
@@ -130,7 +162,7 @@ The example folder provided contains several examples for interacting with the d
   Returns the value of the accelerometer as a object.
 
   example:
-  ```
+  ```js
   acceleration=microBit.getAccelerometer();
   acc_x=acceleration.x;
   acc_y=acceleration.y;
@@ -143,7 +175,7 @@ The example folder provided contains several examples for interacting with the d
   Returns the value of the temperature measured on the processor in celsius.
 
   example:
-  ```
+  ```js
   temperature=microBit.getTemperature();
 
   ```
@@ -155,10 +187,12 @@ The example folder provided contains several examples for interacting with the d
   0= pointing nord
 
   example:
-  ```
+  ```js
   bearing=microBit.getBearing();
 
   ```
+
+
 
 ## Examples
 Check the examples folder for working examples.
@@ -181,3 +215,6 @@ Use the microBit to control Lars the iceberg. Don't let it melt!
 Developed using [p5.js](https://p5js.org/) and [p5.play](http://p5play.molleindustria.org/) library.
 
 [Try it here](https://antefact.github.io/microBit.js/examples/p5play_Lars_example/)
+
+
+### UART example
