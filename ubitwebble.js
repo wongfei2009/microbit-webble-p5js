@@ -175,6 +175,8 @@ class uBitWebBluetooth {
       ledMatrix[i]=parseInt(string,2)
     }
     if(this.connected){
+      //TODO: cant find the writeValue property.
+      //console.log("LED_STATE",this.characteristics.LED_STATE)
       this.characteristics.LED_STATE.writeValue(ledMatrix)
       .then(_ => {
       })
@@ -300,7 +302,7 @@ class uBitWebBluetooth {
       this.temperature = event.target.value.getInt8();
 
     }
-
+    // UART CHARACTERISTIC
     if(event.target.uuid == UART_TX_UUID){
 
       this.onUARTTxCharacteristicValueChanged(event);

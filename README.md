@@ -1,18 +1,16 @@
-# microBit.js
+# microbit-webble.js
 A javascript library to interact with [BBC micro:bit](http://microbit.org/) using web bluetooth API.
 ![lars the iceberg](assets/lars.gif)
 
 ## Usage
 
-To use the library, download and upload [this firmware](https://makecode.microbit.org/_7Xr7kyeAsaV9) on your BBC micro:bit board.
-
-The firmware was produced by [bittysoftware](http://www.bittysoftware.com/downloads.html).
+To use the library, download and upload [this firmware](https://makecode.microbit.org/_Ts3FVcgFv457) on your BBC micro:bit board.
 
 Keep in mind that web bluetooth API are still experimental and your OS and browser might not support the feature. Read more about this [here](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web).
 
 Please refer to the following table for the supported browsers. 
 
-| Browser | WebUSB  |　WebBLE|
+| Browser | WebUSB  |　WebBluetooth|
 |---|---|---|
 | Chrome(Win/Mac) / Edge  | ○ | ○|
 | Safari | X |　X|
@@ -102,6 +100,7 @@ The example folder provided contains several examples for interacting with the d
   ```
 
 - `microBit.setUARTCallback(callbackFunction)`
+
   Register a callback function to be invoked when UART data is received.
 
   example:
@@ -114,6 +113,8 @@ The example folder provided contains several examples for interacting with the d
 
 - `microBit.writeUARTData(text)`
   
+  Send text message to microbit via UART.
+
   example:
   ```js
   var messageText = "Hello!";

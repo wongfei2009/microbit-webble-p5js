@@ -97,7 +97,6 @@ for(var i = 0; i<20; i++) {
 function draw() {
   // Comment this out to avoid having your console flooded with numbers
 
-
   background(0,140,255);
 
   if (microBit.connected){
@@ -106,14 +105,14 @@ function draw() {
       meltingTitle();
       console.log("it's " + larsTemp+ " i'm melting !!")
       showSweat();
-      microBit.writeMatrixIcon(hot);
+      //microBit.writeMatrixIcon(hot);
       waterLevel=waterLevel+0.00001
       parsed= parseFloat(Math.round(waterLevel * 100) / 100).toFixed(2);
 
     } else{
       boatsTitle();
       showLars();
-      microBit.writeMatrixIcon(ok);
+      //microBit.writeMatrixIcon(ok);
     }
   } else {
     connectTitle()
@@ -191,13 +190,13 @@ function get_Microbit_values() {
   moveX=microBit.getAccelerometer().x;
   moveY=microBit.getAccelerometer().y;
   larsTemp=microBit.getTemperature();
-  //console.log ("x: "+ moveX);
-  //console.log ("y: "+ moveY);
-  //console.log ("temp: "+ larsTemp);
-  //console.log ("temperature",microBit.getTemperature());
-  //console.log ("bearing",microBit.getBearing());
-  //console.log ("buttonA",microBit.getButtonA());
-  //console.log ("buttonB",microBit.getButtonB());
+  console.log ("x: "+ moveX);
+  console.log ("y: "+ moveY);
+  console.log ("temp: "+ larsTemp);
+  console.log ("temperature",microBit.getTemperature());
+  console.log ("bearing",microBit.getBearing());
+  console.log ("buttonA",microBit.getButtonA());
+  console.log ("buttonB",microBit.getButtonB());
 }
 
 function searchDevice(){

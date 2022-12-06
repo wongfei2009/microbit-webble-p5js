@@ -1,7 +1,7 @@
 /* micro:bit -> p5*js BLE communication example. 
    Control video playback with microbit gesture input.
 
-micro:bit code: https://makecode.microbit.org/_HwxMh9Fcgcxy
+micro:bit code: https://makecode.microbit.org/_eKA9KJAoFAAV
 
 */
 
