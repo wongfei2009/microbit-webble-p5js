@@ -10,14 +10,15 @@ Keep in mind that web bluetooth API are still experimental and your OS and brows
 
 Please refer to the following table for the supported browsers. 
 
-| Browser | WebUSB  |　WebBluetooth|
-|---|---|---|
-| Chrome(Win/Mac) / Edge  | ○ | ○|
-| Safari | X |　X|
-| Firefox |X　|X|
-| Chrome on Android | ○ | ○|
-| Safari on iOS| X |　X|
-| Chromium on Raspberry PI | ○ | ○|
+| Browser | [WebUSB](https://caniuse.com/webusb)  |　[WebBluetooth](https://caniuse.com/web-bluetooth)|
+|---|:---:|:---:|
+| Chrome (Win/Mac) / Edge  |○|○|
+| Safari |×|×|
+| Firefox |×|×|
+| Opera |○|○|
+| Chrome on Android |○|○|
+| Safari on iOS|×|×|
+| Chromium on Raspberry PI |_|_|
 
 This Library allows you to read and write the values of all the BLEcharacteristic exposed by the microBit board using simplified API's.
 
@@ -99,13 +100,13 @@ The example folder provided contains several examples for interacting with the d
   }
   ```
 
-- `microBit.setUARTCallback(callbackFunction)`
+- `microBit.setReceiveUARTCallback(callbackFunction)`
 
   Register a callback function to be invoked when UART data is received.
 
   example:
   ```js
-  microBit.setUARTCallback(function(data){
+  microBit.setReceiveUARTCallback(function(data){
     console.log("UART received",data);
     receivedText = data;
   });
@@ -201,7 +202,7 @@ Check the examples folder for working examples.
 ### Basic example
 Connect your microbit to a webpage, visualize the data and change the animations on the led matrix.
 
-[Try it here](https://antefact.github.io/microBit.js/examples/basic/)
+[Try it here](https://nkymut.github.io/microBit.js/examples/basic/)
 
 ![web ble demo](assets/html.gif)
 
@@ -209,13 +210,16 @@ Connect your microbit to a webpage, visualize the data and change the animations
 ### basic p5.js example
 Learn how to interact with the microbit from a [p5.js](https://p5js.org/) sketch, rotate a cube on the canva reading the accelerometer.
 
-[Try it here](https://antefact.github.io/microBit.js/examples/p5js_example/)
+[Try it here](https://nkymut.github.io/microBit.js/examples/p5js_example/)
 
 ### Lars the iceberg
 Use the microBit to control Lars the iceberg. Don't let it melt!
 Developed using [p5.js](https://p5js.org/) and [p5.play](http://p5play.molleindustria.org/) library.
 
-[Try it here](https://antefact.github.io/microBit.js/examples/p5play_Lars_example/)
+[Try it here](https://nkymut.github.io/microBit.js/examples/p5play_Lars_example/)
 
 
 ### UART example
+Learn how to exchange text messages between the microbit and a [p5.js](https://p5js.org/) sketch via UART, update microBit's LED message from the sketch.
+
+[Try it here](https://nkymut.github.io/microBit.js/examples/p5play_Lars_example/p5js_sendtext/)
