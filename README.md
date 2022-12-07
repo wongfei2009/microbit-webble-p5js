@@ -37,12 +37,17 @@ The example folder provided contains several examples for interacting with the d
 ## Functions
 
 
-- `microBit.searchDevice()`
+- `microBit.searchDevice()` or `microBit.connectDevice()`
 
   Search for ble devices in range.
 　<br><br>example:
-  ```javascript
-  connectButton.mousePressed(() => {microBit.searchDevice()});
+  ```js
+  connectButton = createButton("connect");
+  connectButton.mousePressed(
+    function(){
+      microBit.searchDevice();
+    }
+  );
   ```
 
 - `microBit.setButtonACallback(callbackFunction)`
@@ -51,9 +56,11 @@ The example folder provided contains several examples for interacting with the d
 
   example:
   ```js
-  microBit.setButtonACallback(function(){
-    console.log("buttonA pressed");
-  });
+  microBit.setButtonACallback(
+    function(){
+      console.log("buttonA pressed");
+    }
+  );
   ```
 
 - `microBit.setButtonBCallback(callbackFunction)`
@@ -62,9 +69,11 @@ The example folder provided contains several examples for interacting with the d
 
   example:
   ```js
-  microBit.setButtonBCallback(function(){
-    console.log("buttonB pressed");
-  });
+  microBit.setButtonBCallback(
+    function(){
+      console.log("buttonB pressed");
+    }
+  );
   ```
 
 - `microBit.onConnect(callbackFunction)`
@@ -73,9 +82,11 @@ The example folder provided contains several examples for interacting with the d
 
   example:
   ```js
-  microBit.onConnect(function(){
-    console.log("connected");
-  });
+  microBit.onConnect(
+    function(){
+      console.log("connected");
+    }
+  );
   ```
 
 - `microBit.onDisconnect(callbackFunction)`
@@ -84,9 +95,11 @@ The example folder provided contains several examples for interacting with the d
 
   example:
   ```js
-  microBit.onDisconnect(function(){
-    console.log("disconnected");
-  });
+  microBit.onDisconnect(
+    function(){
+      console.log("disconnected");
+    }
+  );
   ```
 
 - `microBit.onBleNotify(callbackFunction)`
@@ -95,9 +108,11 @@ The example folder provided contains several examples for interacting with the d
 
   example:
   ```js
-  microBit.onBleNotify(function(){
-    document.getElementById("buttonA").innerHTML=microBit.getButtonA();
-  }
+  microBit.onBleNotify(
+    function(){
+      document.getElementById("buttonA").innerHTML=microBit.getButtonA();
+    }
+  );
   ```
 
 - `microBit.setReceiveUARTCallback(callbackFunction)`
@@ -106,10 +121,12 @@ The example folder provided contains several examples for interacting with the d
 
   example:
   ```js
-  microBit.setReceiveUARTCallback(function(data){
-    console.log("UART received",data);
-    receivedText = data;
-  });
+  microBit.setReceiveUARTCallback(
+    function(data){
+      console.log("UART received",data);
+      receivedText = data;
+    }
+  );
   ```
 
 - `microBit.writeUARTData(text)`
@@ -222,4 +239,4 @@ Developed using [p5.js](https://p5js.org/) and [p5.play](http://p5play.molleindu
 ### UART example
 Learn how to exchange text messages between the microbit and a [p5.js](https://p5js.org/) sketch via UART, update microBit's LED message from the sketch.
 
-[Try it here](https://nkymut.github.io/microBit.js/examples/p5play_Lars_example/p5js_sendtext/)
+[Try it here](https://nkymut.github.io/microBit.js/examples/p5js_sendtext/)
