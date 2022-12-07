@@ -114,7 +114,7 @@ class uBitWebBluetooth {
     this.buttonBCallback=callbackFunction;
   }
 
-  setUARTCallback(callbackFunction){
+  setReceiveUARTCallback(callbackFunction){
     this.onReceiveUARTCallback = callbackFunction;
   }
 
@@ -308,6 +308,10 @@ class uBitWebBluetooth {
       this.onUARTTxCharacteristicValueChanged(event);
     }
 
+  }
+
+  connectDevice() {
+    this.searchDevice();
   }
 
   searchDevice() {

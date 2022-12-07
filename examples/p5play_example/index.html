@@ -7,11 +7,9 @@
   <script language="javascript" src="libraries/p5.dom.js"></script>
   <script language="javascript" src="libraries/p5.sound.js"></script>
   <script language="javascript" src="libraries/p5.play.js"></script>
-  <script language="javascript" type="text/javascript" src="../../ubitwebble.js"></script>
+
   <script language="javascript" type="text/javascript" src="libraries/jquery-3.2.1.min.js"></script>
-  <!-- This is our main sketch for the game-->
-  <script language="javascript" type="text/javascript" src="characters.js"></script>
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
+
   <!-- This controls the style of the main page-->
   <link href="style.css" rel="stylesheet">
 </head>
@@ -19,7 +17,13 @@
 <body>
   <!-- Let's create the interface to connect to our Micro:Bit-->
   <div id="connector">
+  <!-- This is the script that allows you to connect to ble devices-->
+  <script language="javascript" type="text/javascript" src="../../ubitwebble.js"></script>
+
+  <!-- This is our main sketch for the game-->
+  <script language="javascript" type="text/javascript" src="characters.js"></script>
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
 </div>
-<!-- This is the script that allows you to connect to ble devices-->
+
 </body>
 </html>
