@@ -1,5 +1,5 @@
-/* micro:bit -> p5*js BLE communication example. 
-   Control video playback with microbit gesture input.
+/* micro:bit <-> p5*js BLE communication example. 
+echo back text message between micro:bit and p5*js
 
 micro:bit code: https://makecode.microbit.org/_eKA9KJAoFAAV
 
@@ -41,7 +41,7 @@ function setup() {
     // emojiMan.position.x += 10;
   });
 
-  microBit.setUARTCallback(function(data){
+  microBit.setReceiveUARTCallback(function(data){
     console.log("UART received",data);
     receivedText = data;
   });
@@ -99,7 +99,7 @@ function sayBye(){
 
 function keyPressed(){
   messageText = key;
-  writeData(messageText);
+  microBit.writeUARTData(messageText);
 
   print("send:"+messageText);  
 }

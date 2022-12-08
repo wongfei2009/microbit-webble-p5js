@@ -1,22 +1,5 @@
 var microBit;
 var canvas;
-var button;
-
-var iconLeft = [
-  ['0', '0', '0', '0', '0'],
-  ['0', '1', '0', '1', '0'],
-  ['0', '0', '0', '0', '0'],
-  ['1', '0', '0', '0', '1'],
-  ['0', '1', '1', '1', '0']
-]
-
-var iconRight = [
-  ['0', '0', '0', '0', '0'],
-  ['0', '1', '0', '1', '0'],
-  ['0', '0', '0', '0', '0'],
-  ['0', '1', '1', '1', '0'],
-  ['1', '0', '0', '0', '1']
-]
 
 function preload() {
 
@@ -34,16 +17,6 @@ function setup() {
   // connectButton.mousePressed(microBit.searchDevice);
   const disconnectButton = createButton("Disconnect");
   disconnectButton.mousePressed(() => {microBit.disconnectDevice()});
-  microBit.setButtonACallback(function(){
-    console.log("buttonA pressed");
-    microBit.writeMatrixIcon(iconLeft);
-
-  });
-
-  microBit.setButtonBCallback(function(){
-    console.log("buttonB pressed");
-    microBit.writeMatrixText("CIAO!");
-  });
 
   microBit.onConnect(function(){
     console.log("connected");
