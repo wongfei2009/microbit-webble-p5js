@@ -1,8 +1,8 @@
 
 /*
  * @name WebBluetooth Control bulb object with lightsensor value
- * @description This example receives lightsensor value from micro:bit over WebUSB. 
- *  Using microbit-webusb library. https://github.com/bsiever/microbit-webusb
+ * @description This example receives lightsensor value from micro:bit over WebBluetooth. 
+ *  Using microbit-webusb library. https://nkymut.github.io/microbit-webble-p5js/
  
  Setup: 
  1. Upgrade Micro:bit to latest firmware (above version 249) 
