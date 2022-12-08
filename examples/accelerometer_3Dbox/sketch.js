@@ -6,7 +6,7 @@ function preload() {
 }
 
 function setup() {
-  canvas = createCanvas(710, 400, WEBGL);
+  canvas = createCanvas(400, 400, WEBGL);
 
   microBit=new uBitWebBluetooth();
 
@@ -34,7 +34,10 @@ function draw() {
 
     noStroke();
     push();
-    print(microBit.getAccelerometer().x);
+    print("X:"+microBit.getAccelerometer().x);
+    print("Y:"+microBit.getAccelerometer().y);
+    print("Z:"+microBit.getAccelerometer().z);
+
     rotateZ(map(microBit.getAccelerometer().x,-980,980,Math.PI/2,-Math.PI/2));
     rotateX(map(microBit.getAccelerometer().y,-980,980,-Math.PI/2,Math.PI/2));
     box(150);
