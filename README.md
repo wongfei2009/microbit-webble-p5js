@@ -219,24 +219,47 @@ Check the examples folder for working examples.
 ### Basic example
 Connect your microbit to a webpage, visualize the data and change the animations on the led matrix.
 
-[Try it here](https://nkymut.github.io/microBit.js/examples/basic/)
+[micro:bit code](https://makecode.microbit.org/61779-39134-92711-11083)
+
+[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/basic/)
 
 ![web ble demo](assets/html.gif)
 
 
-### basic p5.js example
+### Accelerometer Cube example
 Learn how to interact with the microbit from a [p5.js](https://p5js.org/) sketch, rotate a cube on the canva reading the accelerometer.
 
-[Try it here](https://nkymut.github.io/microBit.js/examples/p5js_example/)
+[micro:bit code](https://makecode.microbit.org/61779-39134-92711-11083)
+
+[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/)
 
 ### Lars the iceberg
 Use the microBit to control Lars the iceberg. Don't let it melt!
 Developed using [p5.js](https://p5js.org/) and [p5.play](http://p5play.molleindustria.org/) library.
 
-[Try it here](https://nkymut.github.io/microBit.js/examples/p5play_Lars_example/)
+[micro:bit code](https://makecode.microbit.org/61779-39134-92711-11083)
 
 
-### UART example
+[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/p5play_Lars_example/)
+
+
+### UART Echo example
 Learn how to exchange text messages between the microbit and a [p5.js](https://p5js.org/) sketch via UART, update microBit's LED message from the sketch.
 
-[Try it here](https://nkymut.github.io/microBit.js/examples/p5js_sendtext/)
+[micro:bit code](https://makecode.microbit.org/_eKA9KJAoFAAV
+)
+
+[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/uart_echotext/)
+
+### UART LightSensor example
+Learn how to receive lightsensor value from the microbit and update a [p5.js](https://p5js.org/) sketch via UART.
+
+
+[micro:bit code](https://makecode.microbit.org/_F8DFrygkTRP1) for micro:bit v2
+
+[micro:bit code](https://nkymut.github.io/microbit-webble-p5js/examples/RecvUARTLightSensor/microbit_code/microbit-LightSensorBLEUARTv01.hex) for micro:bit v1
+
+[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/uart_lightsensor/)
+
+
+
