@@ -30,20 +30,23 @@ function setup() {
 
 function draw() {
   background(78);
+  
+  noStroke();
+  push();
+
   if (microBit.connected){
 
-    noStroke();
-    push();
     print("X:"+microBit.getAccelerometer().x);
     print("Y:"+microBit.getAccelerometer().y);
     print("Z:"+microBit.getAccelerometer().z);
 
     rotateZ(map(microBit.getAccelerometer().x,-980,980,Math.PI/2,-Math.PI/2));
     rotateX(map(microBit.getAccelerometer().y,-980,980,-Math.PI/2,Math.PI/2));
-    box(150);
-    pop();
 
   }
+
+  box(150);
+  pop();
 
 }
 
