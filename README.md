@@ -131,7 +131,7 @@ The example folder provided contains several examples for interacting with the d
   );
   ```
 
-- `microBit.writeUARTData(text)`
+- `microBit.writeUARTData(string)`
   
   Send text message to microbit via UART.
 
@@ -140,6 +140,19 @@ The example folder provided contains several examples for interacting with the d
   var messageText = "Hello!";
   microBit.writeUARTData(messageText);
   ```
+
+- `microBit.sendSerial(string)`
+  
+  Send text line to microbit via UART.
+  an alias of writeUARTData()
+
+  example:
+  ```js
+  var messageText = "Hello!";
+  microBit.sendSerial(messageText);
+  ```
+
+
 - `microBit.writeMatrixIcon(icon)`
 
   Updates the led matrix on the microbit.

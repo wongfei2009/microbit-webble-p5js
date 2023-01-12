@@ -217,6 +217,12 @@ class uBitWebBluetooth {
       });
     }
   }
+  
+  /**
+ * Send a string to a specific device with a newline.
+ * @param {string} data to send (must not include newlines)
+ */
+
 
   writeUARTData(data){
     if (!this.characteristics.UART_RX) {
@@ -231,6 +237,15 @@ class uBitWebBluetooth {
     }
 
   }
+
+  sendSerial(data){
+    this.writeUARTData(data);
+  }
+
+  uBitSend(data) {
+    this.writeUARTData(data);
+  }
+
 
   onUARTTxCharacteristicValueChanged(event) {
     let receivedData = [];
