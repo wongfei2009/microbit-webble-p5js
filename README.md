@@ -116,6 +116,8 @@ The example folder provided contains several examples for interacting with the d
   ```
 
 - `microBit.setReceiveUARTCallback(callbackFunction)`
+- `microBit.onReceiveUART(callbackFunction)`
+- `microBit.onReceiveSerial(callbackFunction)`
 
   Register a callback function to be invoked when UART data is received.
 

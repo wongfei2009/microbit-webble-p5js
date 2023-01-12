@@ -118,6 +118,14 @@ class uBitWebBluetooth {
     this.onReceiveUARTCallback = callbackFunction;
   }
 
+  onReceiveUART(callbackFunction){
+    this.onReceiveUARTCallback = callbackFunction;
+  }
+
+  onReceiveSerial(callbackFunction){
+    this.onReceiveUART(callbackFunction);
+  }
+
   onConnect(callbackFunction){
     this.onConnectCallback=callbackFunction;
   }
