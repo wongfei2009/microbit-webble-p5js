@@ -333,10 +333,6 @@ class uBitWebBluetooth {
 
   }
 
-  connectDevice() {
-    this.searchDevice();
-  }
-
   searchDevice() {
    
     var options = {};
@@ -461,6 +457,11 @@ class uBitWebBluetooth {
         console.error("cannot find a uBit instance! \nmicroBit.searchDevice() must be called within p5 canvas! e.g connectButton.mousePressed(() => {microBit.searchDevice()})");
       }
     });
+  }
+
+
+  connectDevice() {
+    this.searchDevice();
   }
 
   disconnectDevice(){
