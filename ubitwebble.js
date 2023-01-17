@@ -337,8 +337,8 @@ class uBitWebBluetooth {
    
     var options = {};
     options.filters =  [{ namePrefix: "BBC" }];
-    //options.acceptAllDevices = true;
-    //options.optionalServices = [ACCEL_SRV_UUID, MAGNETO_SRV_UUID, BTN_SRV_UUID, IO_PIN_SRV_UUID, LED_SRV_UUID, TEMP_SRV_UUID,UART_SRV_UUID];
+    options.acceptAllDevices = true;
+    options.optionalServices = [ACCEL_SRV_UUID, MAGNETO_SRV_UUID, BTN_SRV_UUID, IO_PIN_SRV_UUID, LED_SRV_UUID, TEMP_SRV_UUID,UART_SRV_UUID];
 
     console.log('Requesting Bluetooth Device...');
     console.log('with ' + JSON.stringify(options));
