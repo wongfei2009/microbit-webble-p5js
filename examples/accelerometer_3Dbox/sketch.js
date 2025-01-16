@@ -7,7 +7,6 @@ class MicrobitVisualizer {
   constructor() {
       this.microBit = new uBitWebBluetooth();
       this.canvas = null;
-      this.isConnected = false;
       this.accelerometerData = { x: 0, y: 0, z: 0 };
       
       // Constants
@@ -42,13 +41,11 @@ class MicrobitVisualizer {
       // Micro:bit connection events
       this.microBit.onConnect(() => {
           console.log('Micro:bit connected');
-          this.isConnected = true;
           this.updateStatusDisplay(true);
       });
 
       this.microBit.onDisconnect(() => {
           console.log('Micro:bit disconnected');
-          this.isConnected = false;
           this.updateStatusDisplay(false);
       });
   }
@@ -67,7 +64,7 @@ class MicrobitVisualizer {
   draw() {
       background(this.BACKGROUND_COLOR);
       
-      if (this.isConnected) {
+      if (this.microBit.connected) {
           this.updateAccelerometerData();
       }
       
@@ -90,7 +87,7 @@ class MicrobitVisualizer {
       noStroke();
       push();
 
-      if (this.isConnected) {
+      if (this.microBit.connected) {
           // Map accelerometer data to rotation angles
           const rotationZ = map(
               this.accelerometerData.x,
