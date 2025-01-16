@@ -89,10 +89,17 @@ function setup() {
 
 function draw() {
   // Comment this out to avoid having your console flooded with numbers
-
+  
   background(0, 140, 255);
-
-  if (microBit.connected) {
+  
+  // Store connection status to avoid checking multiple times
+  const isConnected = microBit.connected;
+  
+  // Clear previous text
+  clear();
+  background(0, 140, 255);
+  
+  if (isConnected) {
     get_Microbit_values();
     if (larsTemp > localTemp - 5) {
       meltingTitle();
@@ -101,14 +108,14 @@ function draw() {
       //microBit.writeMatrixIcon(hot);
       waterLevel = waterLevel + 0.00001
       parsed = parseFloat(Math.round(waterLevel * 100) / 100).toFixed(2);
-
     } else {
       boatsTitle();
       showLars();
       //microBit.writeMatrixIcon(ok);
     }
   } else {
-    connectTitle()
+    // Only show connection message if definitely not connected
+    connectTitle();
   }
 
   updateBoats();
@@ -143,7 +150,6 @@ function connectTitle() {
   text("Lars is a game about ice, boats and climate change", width / 2, 40);
   textSize(15);
   text("and a demo game for ubitwebble.js and p5.js", width / 2, 60);
-  text("Connect your Microbit", width / 2, height - 60);
   //console.log(temp);
 }
 
