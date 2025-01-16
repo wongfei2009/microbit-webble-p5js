@@ -16,44 +16,44 @@ var iconRight = [
   ['1', '0', '0', '0', '1']
 ]
 
-microBit=new uBitWebBluetooth();
-console.log("mbit",microBit);
-microBit.onConnect(function(){
+microBit = new uBitWebBluetooth();
+console.log("mbit", microBit);
+microBit.onConnect(function () {
   console.log("connected");
 
-  document.getElementById("connected").innerHTML="true";
+  document.getElementById("connected").innerHTML = "true";
   document.getElementById("properties").classList.toggle('inactive');
 
 
 
-  microBit.setButtonACallback(function(){
+  microBit.setButtonACallback(function () {
     console.log("buttonA pressed");
   });
 
-  microBit.setButtonBCallback(function(){
+  microBit.setButtonBCallback(function () {
     console.log("buttonB pressed");
   });
 });
 
-microBit.onDisconnect(function(){
+microBit.onDisconnect(function () {
   console.log("disconnected");
-  document.getElementById("connected").innerHTML="false";
+  document.getElementById("connected").innerHTML = "false";
 });
 
-function searchDevice(){
+function searchDevice() {
   microBit.searchDevice();
 }
 
-microBit.onBleNotify(function(){
-  document.getElementById("buttonA").innerHTML=microBit.getButtonA();
-  document.getElementById("buttonB").innerHTML=microBit.getButtonB();
+microBit.onBleNotify(function () {
+  document.getElementById("buttonA").innerHTML = microBit.getButtonA();
+  document.getElementById("buttonB").innerHTML = microBit.getButtonB();
 
-  document.getElementById("acc_X").innerHTML=microBit.getAccelerometer().x;
-  document.getElementById("acc_Y").innerHTML=microBit.getAccelerometer().y;
-  document.getElementById("acc_Z").innerHTML=microBit.getAccelerometer().z;
+  document.getElementById("acc_X").innerHTML = microBit.getAccelerometer().x;
+  document.getElementById("acc_Y").innerHTML = microBit.getAccelerometer().y;
+  document.getElementById("acc_Z").innerHTML = microBit.getAccelerometer().z;
 
-  document.getElementById("temp").innerHTML=microBit.getTemperature();
-  document.getElementById("bearing").innerHTML=microBit.getBearing();
+  document.getElementById("temp").innerHTML = microBit.getTemperature();
+  document.getElementById("bearing").innerHTML = microBit.getBearing();
 })
 
 
@@ -65,17 +65,17 @@ var ledMatrix = [
   ['0', '0', '0', '0', '0']
 ]
 
-function updatePixel(x,y,value){
-  if (value){
-    ledMatrix[x][y]=1;
-  }else{
-    ledMatrix[x][y]=0;
+function updatePixel(x, y, value) {
+  if (value) {
+    ledMatrix[x][y] = 1;
+  } else {
+    ledMatrix[x][y] = 0;
   }
   microBit.writeMatrixIcon(ledMatrix);
 }
 
-function updateText(){
-  text=document.getElementById("newText").value;
+function updateText() {
+  text = document.getElementById("newText").value;
   console.log(text);
   microBit.writeMatrixText(text);
 }
