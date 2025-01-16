@@ -1,280 +1,83 @@
-# microbit-webble.js
-A javascript library to interact with [BBC micro:bit](http://microbit.org/) using web bluetooth API.
+# ubitwebble.js
+A JavaScript library for interacting with BBC micro:bit using Web Bluetooth API. Control LED matrix, read sensors, and exchange data wirelessly between micro:bit and web browsers.
+
 ![lars the iceberg](assets/lars.gif)
 
-## Usage
+## Installation
 
-To use the library, download and upload [this firmware](https://makecode.microbit.org/_Ts3FVcgFv457) on your BBC micro:bit board.
+1. Download the library:
+```bash
+git clone https://github.com/wongfei2009/microbit-webble-p5js.git
+```
 
-Keep in mind that web bluetooth API are still experimental and your OS and browser might not support the feature. Read more about this [here](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web).
+2. Upload [this firmware](https://makecode.microbit.org/_Ts3FVcgFv457) to your micro:bit
 
-Please refer to the following table for the supported browsers. 
+3. Include in your project:
+```html
+<script src="ubitwebble.js"></script>
+```
 
-| Browser | [WebUSB](https://caniuse.com/webusb)  |　[WebBluetooth](https://caniuse.com/web-bluetooth)|
-|---|:---:|:---:|
-| Chrome (Win/Mac) / Edge  |○|○|
-| Safari |×|×|
-| Firefox |×|×|
-| Opera |○|○|
-| Chrome on Android |○|○|
-| Safari on iOS|×|×|
-| Chromium on Raspberry PI |_|_|
+## Browser Support
 
-This Library allows you to read and write the values of all the BLEcharacteristic exposed by the microBit board using simplified API's.
+| Browser | Support Status | Notes |
+|---------|---------------|-------|
+| Chrome 56+ | ✅ Full | Windows, Mac, Android |
+| Edge (Chromium) | ✅ Full | Windows, Mac |
+| Opera | ✅ Full | All platforms |
+| Firefox | ❌ No | - |
+| Safari | ❌ No | iOS or Mac |
 
-For more info about all micro:bit ble services please refer to the [official documentation](https://lancaster-university.github.io/microbit-docs/ble/profile/).
+## Quick Start
 
-The example folder provided contains several examples for interacting with the device.
+```javascript
+// Create instance
+const microBit = new uBitWebBluetooth();
 
-## Constructor
+// Connect
+await microBit.searchDevice();
 
-- `microBit=new uBitWebBluetooth()`
-
-## Properties
-
-- `microBit.connected`
-
-## Functions
-
-
-- `microBit.searchDevice()` or `microBit.connectDevice()`
-
-  Search for ble devices in range.
-　<br><br>example:
-  ```js
-  connectButton = createButton("connect");
-  connectButton.mousePressed(
-    function(){
-      microBit.searchDevice();
-    }
-  );
-  ```
-
-- `microBit.setButtonACallback(callbackFunction)`
-
-  Register a callback function to be invoked when Button A is pressed.
-
-  example:
-  ```js
-  microBit.setButtonACallback(
-    function(){
-      console.log("buttonA pressed");
-    }
-  );
-  ```
-
-- `microBit.setButtonBCallback(callbackFunction)`
-
-  Register a callback function to be invoked when Button B is pressed.
-
-  example:
-  ```js
-  microBit.setButtonBCallback(
-    function(){
-      console.log("buttonB pressed");
-    }
-  );
-  ```
-
-- `microBit.onConnect(callbackFunction)`
-
-  Register a callback function invoked when the microBit connects
-
-  example:
-  ```js
-  microBit.onConnect(
-    function(){
-      console.log("connected");
-    }
-  );
-  ```
-
-- `microBit.onDisconnect(callbackFunction)`
-
-  Register a callback function invoked when the microBit disconnects
-
-  example:
-  ```js
-  microBit.onDisconnect(
-    function(){
-      console.log("disconnected");
-    }
-  );
-  ```
-
-- `microBit.onBleNotify(callbackFunction)`
-
-  Register a callback function invoked every time the value of characteristic changes and it is notified by the device.
-
-  example:
-  ```js
-  microBit.onBleNotify(
-    function(){
-      document.getElementById("buttonA").innerHTML=microBit.getButtonA();
-    }
-  );
-  ```
-
-- `microBit.setReceiveUARTCallback(callbackFunction)`
-- `microBit.onReceiveUART(callbackFunction)`
-- `microBit.onReceiveSerial(callbackFunction)`
-
-  Register a callback function to be invoked when UART data is received.
-
-  example:
-  ```js
-  microBit.setReceiveUARTCallback(
-    function(data){
-      console.log("UART received",data);
-      receivedText = data;
-    }
-  );
-  ```
-
-- `microBit.writeUARTData(string)`
-  
-  Send text message to microbit via UART.
-
-  example:
-  ```js
-  var messageText = "Hello!";
-  microBit.writeUARTData(messageText);
-  ```
-
-- `microBit.sendSerial(string)`
-  
-  Send text line to microbit via UART.
-  an alias of writeUARTData()
-
-  example:
-  ```js
-  var messageText = "Hello!";
-  microBit.sendSerial(messageText);
-  ```
-
-
-- `microBit.writeMatrixIcon(icon)`
-
-  Updates the led matrix on the microbit.
-  The `icon` passed to the function must be 5x5 matrix.
-  0=led off;
-  1=led on;
-
-  example:
-  ```js
-  var ledMatrix = [
-    ['0', '0', '0', '0', '0'],
-    ['0', '1', '0', '1', '0'],
-    ['0', '0', '0', '0', '0'],
-    ['1', '0', '0', '0', '1'],
-    ['0', '1', '1', '1', '0']
-  ]
-
-  microBit.writeMatrixIcon(ledMatrix);
-
-  ```
-
-- `microBit.writeMatrixText(text)`
-
-  Updates the led matrix of the microbit with a scrolling text.
-
-  example:
-  ```js
-  microBit.writeMatrixText("ciao microBit")
-  ```
-
-- `writeMatrixTextSpeed(speed)`
-
-  set the speed of the scrolling text on the matrix
-  example:
-  ```js
-  microBit.writeMatrixTextSpeed(10)
-  ```
-
-- `microBit.getAccelerometer()`
-
-  Returns the value of the accelerometer as a object.
-
-  example:
-  ```js
-  acceleration=microBit.getAccelerometer();
-  acc_x=acceleration.x;
-  acc_y=acceleration.y;
-  acc_z=acceleration.z;
-
-  ```
-
-- `microBit.getTemperature()`
-
-  Returns the value of the temperature measured on the processor in celsius.
-
-  example:
-  ```js
-  temperature=microBit.getTemperature();
-
-  ```
-
-
-- `microBit.getBearing()`
-
-  Returns the value of magnetometer bearing from 0 to 360.
-  0= pointing nord
-
-  example:
-  ```js
-  bearing=microBit.getBearing();
-
-  ```
-
-
+// Show a smile!
+const smile = [
+  ['0', '0', '0', '0', '0'],
+  ['0', '1', '0', '1', '0'],
+  ['0', '0', '0', '0', '0'], 
+  ['1', '0', '0', '0', '1'],
+  ['0', '1', '1', '1', '0']
+];
+microBit.writeMatrixIcon(smile);
+```
 
 ## Examples
-Check the examples folder for working examples.
 
-### Basic example
-Connect your microbit to a webpage, visualize the data and change the animations on the led matrix.
-
-[micro:bit code](https://makecode.microbit.org/61779-39134-92711-11083)
-
-[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/basic/)
-
-![web ble demo](assets/html.gif)
+1. **Basic Demo** - LED matrix control ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/basic/))
+2. **3D Accelerometer** - Rotate cube with tilt ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/))
+3. **Lars Game** - Complete game using micro:bit controls ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/p5play_Lars_example/))
+4. **UART Echo** - Text communication ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/uart_echotext/))
+5. **Light Sensor** - Read sensor data ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/uart_lightsensor/))
 
 
-### Accelerometer Cube example
-Learn how to interact with the microbit from a [p5.js](https://p5js.org/) sketch, rotate a cube on the canva reading the accelerometer.
+## API Reference
 
-[micro:bit code](https://makecode.microbit.org/61779-39134-92711-11083)
+### Connection
+- `microBit.searchDevice()` - Connect to device
+- `microBit.onConnect(callback)` - Connection success handler
+- `microBit.onDisconnect(callback)` - Disconnection handler
 
-[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/)
+### Inputs
+- `microBit.setButtonACallback(callback)` - Button A press handler
+- `microBit.setButtonBCallback(callback)` - Button B press handler
+- `microBit.getAccelerometer()` - Get acceleration {x,y,z}
+- `microBit.getTemperature()` - Get temperature (°C)
+- `microBit.getBearing()` - Get compass heading (0-360°)
 
-### Lars the iceberg
-Use the microBit to control Lars the iceberg. Don't let it melt!
-Developed using [p5.js](https://p5js.org/) and [p5.play](http://p5play.molleindustria.org/) library.
+### Display
+- `microBit.writeMatrixIcon(matrix)` - Show LED pattern
+- `microBit.writeMatrixText(text)` - Show scrolling text
+- `microBit.writeMatrixTextSpeed(speed)` - Set scroll speed
 
-[micro:bit code](https://makecode.microbit.org/61779-39134-92711-11083)
-
-
-[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/p5play_Lars_example/)
-
-
-### UART Echo example
-Learn how to exchange text messages between the microbit and a [p5.js](https://p5js.org/) sketch via UART, update microBit's LED message from the sketch.
-
-[micro:bit code](https://makecode.microbit.org/_eKA9KJAoFAAV
-)
-
-[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/uart_echotext/)
-
-### UART LightSensor example
-Learn how to receive lightsensor value from the microbit and update a [p5.js](https://p5js.org/) sketch via UART.
-
-
-[micro:bit code](https://makecode.microbit.org/_F8DFrygkTRP1) for micro:bit v2
-
-[micro:bit code](https://nkymut.github.io/microbit-webble-p5js/examples/RecvUARTLightSensor/microbit_code/microbit-LightSensorBLEUARTv01.hex) for micro:bit v1
-
-[Try it here](https://nkymut.github.io/microbit-webble-p5js/examples/uart_lightsensor/)
+### Communication
+- `microBit.writeUARTData(text)` - Send UART message
+- `microBit.setReceiveUARTCallback(callback)` - Receive UART handler
 
 
 
