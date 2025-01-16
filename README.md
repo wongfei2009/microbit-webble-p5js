@@ -47,13 +47,29 @@ const smile = [
 microBit.writeMatrixIcon(smile);
 ```
 
-## Examples
+## Running Examples Locally
 
-1. **Basic Demo** - LED matrix control ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/basic/))
-2. **3D Accelerometer** - Rotate cube with tilt ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/))
-3. **Lars Game** - Complete game using micro:bit controls ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/p5play_Lars_example/))
-4. **UART Echo** - Text communication ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/uart_echotext/))
-5. **Light Sensor** - Read sensor data ([Try it](https://nkymut.github.io/microbit-webble-p5js/examples/uart_lightsensor/))
+1. Clone this repository:
+   ```sh
+   git clone https://github.com/wongfei2009/microbit-webble-p5js.git
+   cd microbit-webble-p5js
+   ```
+
+2. Start a local web server. You can use:
+
+   - Using Python 3:
+     ```sh
+     python -m http.server 8000
+     ```
+   
+3. Open your web browser and navigate to:
+   - http://localhost:8000/examples/basic/
+   - http://localhost:8000/examples/accelerometer_3Dbox/
+   - http://localhost:8000/examples/p5play_example/ 
+   - http://localhost:8000/examples/uart_echotext/
+   - http://localhost:8000/examples/uart_lightsensor/
+
+Note: A local server is required because browsers restrict Web Bluetooth API access to secure contexts (HTTPS) or localhost.
 
 
 ## API Reference
