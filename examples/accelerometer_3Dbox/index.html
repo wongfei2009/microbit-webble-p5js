@@ -1,45 +1,282 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
-  <script language="javascript" type="text/javascript" src="libraries/p5.dom.js"></script>
-  <script language="javascript" type="text/javascript" src="../../ubitwebble.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro:bit 3D Orientation Viewer</title>
+    
+    <!-- External Libraries -->
+    <script src="libraries/p5.js"></script>
+    <script src="libraries/p5.dom.js"></script>
+    <script src="../../ubitwebble.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --success-color: #22c55e;
+        }
 
-  <!-- uncomment lines below to include extra p5 libraries -->
-  <!--<script language="javascript" src="libraries/p5.sound.js"></script>-->
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-color), #1e1b4b);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-color);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
 
-  <!-- this line removes any default padding and style. you might only need one of these values set. -->
-  <style>
-    body {
-      padding: 0;
-      margin: 0;
-    }
+        header {
+            padding: 1.5rem;
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-    canvas {
-      display: block;
-    }
-    button{
-      width:200px;
-      height:30px;      
-    }
-    #connector {
-      background-color: black;
-      padding: 4px;
-      color: white;
-      position: fixed;
-      bottom: 0px;
-      width: 100%;
-      text-align: center;
-    }
-  </style>
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        #status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background-color: var(--danger-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #status.connected {
+            background-color: var(--success-color);
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        #canvas-container {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #defaultCanvas0 {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #canvas-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            background-color: var(--card-hover);
+        }
+
+        #controls {
+            padding: 1.5rem;
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            position: sticky;
+            bottom: 0;
+        }
+
+        button {
+            min-width: 200px;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #connect-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #connect-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #disconnect-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        #disconnect-btn:hover {
+            background-color: var(--danger-hover);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .connection-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: currentColor;
+            position: relative;
+        }
+
+        .connection-indicator::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background-color: currentColor;
+            opacity: 0.4;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            #controls {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            #canvas-container {
+                padding: 1rem;
+            }
+        }
+
+        /* Dark mode optimization */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+            }
+        }
+    </style>
 </head>
-
 <body>
- 
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
+    <header>
+        <div class="header-content">
+            <h1 class="title">Micro:bit 3D Orientation Viewer</h1>
+            <div id="status">
+                <span class="connection-indicator"></span>
+                Disconnected
+            </div>
+        </div>
+    </header>
 
+    <main>
+        <div id="canvas-container"></div>
+    </main>
+
+    <div id="controls">
+        <button id="connect-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            Connect Micro:bit
+        </button>
+        <button id="disconnect-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+            Disconnect
+        </button>
+    </div>
+    
+    <script src="sketch.js"></script>
 </body>
-
 </html>
