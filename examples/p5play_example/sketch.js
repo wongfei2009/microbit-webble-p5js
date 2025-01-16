@@ -147,7 +147,7 @@ function connectTitle() {
   fill(255, 255, 255);
   textAlign(CENTER);
   textSize(20);
-  text("Lars is a game about ice, boats and climate change", width / 2, 40);
+  text("Lars is a game about ice, boats, climate change", width / 2, 40);
   textSize(15);
   text("and a demo game for ubitwebble.js and p5.js", width / 2, 60);
   //console.log(temp);
