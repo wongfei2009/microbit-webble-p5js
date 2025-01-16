@@ -18,6 +18,7 @@ var iconRight = [
 
 microBit = new uBitWebBluetooth();
 console.log("mbit", microBit);
+
 microBit.onConnect(function () {
   console.log("connected");
 
@@ -45,6 +46,7 @@ function searchDevice() {
 }
 
 microBit.onBleNotify(function () {
+  document.getElementById("connected").innerHTML = "true";
   document.getElementById("buttonA").innerHTML = microBit.getButtonA();
   document.getElementById("buttonB").innerHTML = microBit.getButtonB();
 
