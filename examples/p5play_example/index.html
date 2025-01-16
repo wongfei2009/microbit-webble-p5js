@@ -1,29 +1,59 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Here are all the wonderful libraries that we will use -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Preload fonts for better performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
-  <script language="javascript" src="libraries/p5.dom.js"></script>
-  <script language="javascript" src="libraries/p5.sound.js"></script>
-  <script language="javascript" src="libraries/p5.play.js"></script>
-
-  <script language="javascript" type="text/javascript" src="libraries/jquery-3.2.1.min.js"></script>
-
-  <!-- This controls the style of the main page-->
+  
+  <!-- Game libraries -->
+  <script src="libraries/p5.js"></script>
+  <script src="libraries/p5.dom.js"></script>
+  <script src="libraries/p5.sound.js"></script>
+  <script src="libraries/p5.play.js"></script>
+  <script src="libraries/jquery-3.2.1.min.js"></script>
+  
+  <!-- Custom styles -->
   <link href="style.css" rel="stylesheet">
+  
+  <title>Lars - Climate Change Game</title>
 </head>
 
 <body>
-  <!-- Let's create the interface to connect to our Micro:Bit-->
+  <main>
+    <!-- Game canvas will be injected here by p5.js -->
+  </main>
+
   <div id="connector">
-  <!-- This is the script that allows you to connect to ble devices-->
-  <script language="javascript" type="text/javascript" src="../../ubitwebble.js"></script>
+    <div class="connector-content">
+      <button id="connect-btn" class="connect-button" aria-label="Connect Microbit">
+        Connect
+      </button>
+    </div>
+  </div>
 
-  <!-- This is our main sketch for the game-->
-  <script language="javascript" type="text/javascript" src="characters.js"></script>
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
-</div>
+  <!-- Microbit connection script -->
+  <script src="../../ubitwebble.js"></script>
+  
+  <!-- Game scripts -->
+  <script src="characters.js"></script>
+  <script src="sketch.js"></script>
 
+  <!-- Initialize game -->
+  <script>
+    // Update button reference in sketch.js
+    window.addEventListener('load', function() {
+      const connectButton = document.getElementById('connect-btn');
+      if (connectButton) {
+        connectButton.addEventListener('click', searchDevice);
+      }
+    });
+  </script>
 </body>
 </html>

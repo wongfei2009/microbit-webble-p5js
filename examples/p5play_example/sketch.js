@@ -70,7 +70,7 @@ ypos=height/2
 microBit = new uBitWebBluetooth();
 
 // Here we create the pairing interface
-button = createButton('connect microBit');
+button = createButton('Connect');
 button.position(width/2-50,height-40);
 button.mousePressed(searchDevice); // attach button listener
 
@@ -149,8 +149,8 @@ function connectTitle(){
   textSize(20);
   text("Lars is a game about ice, boats and climate change", width/2, 40);
   textSize(15);
-  text("and a demo game for our microbit.js library and p5js", width/2, 60);
-  text("Connect your microbit", width/2, height-60);
+  text("and a demo game for ubitwebble.js and p5.js", width/2, 60);
+  text("Connect your Microbit", width/2, height-60);
   //console.log(temp);
 }
 
