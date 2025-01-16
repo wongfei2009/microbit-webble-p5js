@@ -59,7 +59,7 @@ microBit.writeMatrixIcon(smile);
 
    - Using Python 3:
      ```sh
-     python -m http.server 8000
+     python3 -m http.server 8000
      ```
    
 3. Open your web browser and navigate to:
