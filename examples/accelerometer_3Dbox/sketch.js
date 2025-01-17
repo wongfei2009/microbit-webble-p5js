@@ -1,6 +1,6 @@
 /**
- * Micro:bit 3D Orientation Viewer
- * This sketch creates a 3D visualization of a Micro:bit's orientation using its accelerometer data.
+ * Micro:bit 3D Orientation Viewer - Kid-Friendly Version
+ * This sketch creates a fun 3D character that moves with the Micro:bit's orientation.
  */
 
 class MicrobitVisualizer {
@@ -13,9 +13,18 @@ class MicrobitVisualizer {
         this.smoothedAccelerometerData = { x: 0, y: 0, z: 0 };
         
         // Constants
-        this.ACCELEROMETER_RANGE = 980; // Maximum accelerometer value
+        this.ACCELEROMETER_RANGE = 980;
         this.BOX_SIZE = 150;
-        this.BACKGROUND_COLOR = 78;
+        this.BACKGROUND_COLOR = '#87CEEB'; // Sky blue background
+        this.CHARACTER_COLOR = '#FF69B4'; // Pink base color
+        this.EYE_COLOR = '#FFFFFF';
+        this.PUPIL_COLOR = '#000000';
+        this.SMILE_COLOR = '#FF0000';
+        
+        // Animation variables
+        this.bounceOffset = 0;
+        this.blinkTime = 0;
+        this.isBlinking = false;
         
         // Smoothing factor (0 = no smoothing, 1 = infinite smoothing)
         this.SMOOTHING_FACTOR = 0.85;
@@ -43,7 +52,6 @@ class MicrobitVisualizer {
 
         document.getElementById('disconnect-btn').addEventListener('click', () => {
             this.microBit.disconnectDevice();
-            // Reset data when disconnecting
             this.resetData();
         });
     }
@@ -55,7 +63,7 @@ class MicrobitVisualizer {
 
     updateStatusDisplay(connected) {
         const statusElement = document.getElementById('status');
-        statusElement.textContent = connected ? 'Connected' : 'Disconnected';
+        statusElement.textContent = connected ? 'Connected! 😊' : 'Waiting for friend... 👋';
         if (connected) {
             statusElement.classList.add('connected');
         } else {
@@ -74,7 +82,11 @@ class MicrobitVisualizer {
             this.updateAccelerometerData();
         }
 
-        this.drawCube();
+        // Add ambient light and directional light for better 3D effect
+        ambientLight(60);
+        directionalLight(255, 255, 255, 0.5, 0.5, -1);
+
+        this.drawCharacter(isConnected);
     }
 
     smoothData(newValue, oldValue) {
@@ -88,14 +100,12 @@ class MicrobitVisualizer {
     updateAccelerometerData() {
         const accel = this.microBit.getAccelerometer();
         
-        // Update raw data
         this.rawAccelerometerData = {
             x: accel.x,
             y: accel.y,
             z: accel.z
         };
         
-        // Apply smoothing
         this.smoothedAccelerometerData = {
             x: this.smoothData(this.rawAccelerometerData.x, this.smoothedAccelerometerData.x),
             y: this.smoothData(this.rawAccelerometerData.y, this.smoothedAccelerometerData.y),
@@ -103,12 +113,28 @@ class MicrobitVisualizer {
         };
     }
 
-    drawCube() {
-        
+    drawCharacter(isConnected) {
         push();
         
-        if (this.microBit.connected) {
-            // Map smoothed accelerometer data to rotation angles with sensitivity adjustment
+        // Bouncing animation
+        this.bounceOffset = sin(frameCount * 0.05) * 10;
+        
+        // Handle blinking
+        if (frameCount % 120 === 0) { // Start blink every 120 frames
+            this.isBlinking = true;
+            this.blinkTime = 0;
+        }
+        if (this.isBlinking) {
+            this.blinkTime += 1;
+            if (this.blinkTime > 10) { // End blink after 10 frames
+                this.isBlinking = false;
+            }
+        }
+
+        translate(0, this.bounceOffset, 0);
+        
+        if (isConnected) {
+            // Map smoothed accelerometer data to rotation angles
             const rotationZ = this.constrainRotation(
                 map(
                     this.smoothedAccelerometerData.x,
@@ -129,18 +155,59 @@ class MicrobitVisualizer {
                 ) * this.ROTATION_SENSITIVITY
             );
 
-            // Apply rotations
             rotateZ(rotationZ);
             rotateX(rotationX);
-            
         } else {
-            // Add idle animation when disconnected
-            rotateY(frameCount * 0.02);
-            rotateX(sin(frameCount * 0.02) * 0.1);
+            // More playful idle animation
+            rotateY(sin(frameCount * 0.02) * 0.3);
+            rotateX(sin(frameCount * 0.03) * 0.2);
         }
 
-        // Draw the box with slightly rounded edges
-        box(this.BOX_SIZE, this.BOX_SIZE, this.BOX_SIZE, 4);
+        // Draw main body (rounded cube)
+        fill(this.CHARACTER_COLOR);
+        stroke(0);
+        strokeWeight(2);
+        box(this.BOX_SIZE, this.BOX_SIZE, this.BOX_SIZE, 20);
+
+        // Draw eyes
+        push();
+        translate(0, -20, this.BOX_SIZE/2);
+        
+        // Left eye
+        push();
+        translate(-30, 0, 0);
+        fill(this.EYE_COLOR);
+        sphere(20);
+        // Pupil
+        translate(0, 0, 15);
+        fill(this.PUPIL_COLOR);
+        if (!this.isBlinking) {
+            sphere(10);
+        }
+        pop();
+
+        // Right eye
+        push();
+        translate(30, 0, 0);
+        fill(this.EYE_COLOR);
+        sphere(20);
+        // Pupil
+        translate(0, 0, 15);
+        fill(this.PUPIL_COLOR);
+        if (!this.isBlinking) {
+            sphere(10);
+        }
+        pop();
+        pop();
+
+        // Draw smile
+        push();
+        translate(0, 20, this.BOX_SIZE/2);
+        rotateX(PI/4);
+        fill(this.SMILE_COLOR);
+        noStroke();
+        torus(30, 5);
+        pop();
         
         pop();
     }
