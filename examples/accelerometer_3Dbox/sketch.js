@@ -26,14 +26,17 @@ class MicrobitVisualizer {
         this.blinkTime = 0;
         this.isBlinking = false;
         
-        // Smoothing factor (0 = no smoothing, 1 = infinite smoothing)
-        this.SMOOTHING_FACTOR = 0.85;
+        // Separate smoothing factors for different axes
+        this.SMOOTHING_FACTOR_XY = 0.85;  // For tilt (X and Y axes)
+        this.SMOOTHING_FACTOR_Z = 0.92;   // Higher smoothing for rotation (Z axis)
         
-        // Rotation sensitivity (lower = less sensitive)
-        this.ROTATION_SENSITIVITY = 0.7;
+        // Separate rotation sensitivity for different axes
+        this.ROTATION_SENSITIVITY_XY = 0.7;  // For tilt
+        this.ROTATION_SENSITIVITY_Z = 0.5;   // Less sensitive for rotation
         
         // Maximum rotation angles (in radians)
-        this.MAX_ROTATION = Math.PI / 3;
+        this.MAX_ROTATION_XY = Math.PI / 3;
+        this.MAX_ROTATION_Z = Math.PI / 2;
 
         this.setupEventListeners();
     }
@@ -89,12 +92,12 @@ class MicrobitVisualizer {
         this.drawCharacter(isConnected);
     }
 
-    smoothData(newValue, oldValue) {
-        return oldValue * this.SMOOTHING_FACTOR + newValue * (1 - this.SMOOTHING_FACTOR);
+    smoothData(newValue, oldValue, smoothingFactor) {
+        return oldValue * smoothingFactor + newValue * (1 - smoothingFactor);
     }
 
-    constrainRotation(angle) {
-        return constrain(angle, -this.MAX_ROTATION, this.MAX_ROTATION);
+    constrainRotation(angle, maxRotation) {
+        return constrain(angle, -maxRotation, maxRotation);
     }
 
     updateAccelerometerData() {
@@ -106,10 +109,11 @@ class MicrobitVisualizer {
             z: accel.z
         };
         
+        // Use different smoothing factors for different axes
         this.smoothedAccelerometerData = {
-            x: this.smoothData(this.rawAccelerometerData.x, this.smoothedAccelerometerData.x),
-            y: this.smoothData(this.rawAccelerometerData.y, this.smoothedAccelerometerData.y),
-            z: this.smoothData(this.rawAccelerometerData.z, this.smoothedAccelerometerData.z)
+            x: this.smoothData(this.rawAccelerometerData.x, this.smoothedAccelerometerData.x, this.SMOOTHING_FACTOR_Z),  // Z-rotation uses X
+            y: this.smoothData(this.rawAccelerometerData.y, this.smoothedAccelerometerData.y, this.SMOOTHING_FACTOR_XY),
+            z: this.smoothData(this.rawAccelerometerData.z, this.smoothedAccelerometerData.z, this.SMOOTHING_FACTOR_XY)
         };
     }
 
@@ -142,7 +146,8 @@ class MicrobitVisualizer {
                     this.ACCELEROMETER_RANGE,
                     Math.PI / 2,
                     -Math.PI / 2
-                ) * this.ROTATION_SENSITIVITY
+                ) * this.ROTATION_SENSITIVITY_Z,
+                this.MAX_ROTATION_Z
             );
 
             const rotationX = this.constrainRotation(
@@ -152,7 +157,8 @@ class MicrobitVisualizer {
                     this.ACCELEROMETER_RANGE,
                     -Math.PI / 2,
                     Math.PI / 2
-                ) * this.ROTATION_SENSITIVITY
+                ) * this.ROTATION_SENSITIVITY_XY,
+                this.MAX_ROTATION_XY
             );
 
             rotateZ(rotationZ);
