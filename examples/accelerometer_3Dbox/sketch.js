@@ -32,7 +32,7 @@ class MicrobitVisualizer {
     setup() {
         const container = document.getElementById('canvas-container');
         this.canvas = createCanvas(400, 400, WEBGL);
-        this.canvas.parent(container);        
+        container.appendChild(this.canvas.elt);      
         this.updateStatusDisplay(false);
     }
 
