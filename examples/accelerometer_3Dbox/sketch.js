@@ -1,6 +1,7 @@
 /**
  * Micro:bit 3D Orientation Viewer - Kid-Friendly Version
  * This sketch creates a fun 3D character that moves with the Micro:bit's orientation.
+ * Added button-reactive eye animations.
  */
 
 class MicrobitVisualizer {
@@ -25,6 +26,9 @@ class MicrobitVisualizer {
         this.bounceOffset = 0;
         this.blinkTime = 0;
         this.isBlinking = false;
+        this.leftEyeWink = 0;  // Animation counter for left eye wink
+        this.rightEyeWink = 0; // Animation counter for right eye wink
+        this.WINK_DURATION = 15; // Duration of wink animation in frames
         
         // Separate smoothing factors for different axes
         this.SMOOTHING_FACTOR_XY = 0.85;  // For tilt (X and Y axes)
@@ -57,6 +61,15 @@ class MicrobitVisualizer {
             this.microBit.disconnectDevice();
             this.resetData();
         });
+
+        // Setup button callbacks
+        this.microBit.setButtonACallback(() => {
+            this.leftEyeWink = this.WINK_DURATION;
+        });
+
+        this.microBit.setButtonBCallback(() => {
+            this.rightEyeWink = this.WINK_DURATION;
+        });
     }
 
     resetData() {
@@ -84,6 +97,10 @@ class MicrobitVisualizer {
         if (isConnected) {
             this.updateAccelerometerData();
         }
+
+        // Update wink animations
+        if (this.leftEyeWink > 0) this.leftEyeWink--;
+        if (this.rightEyeWink > 0) this.rightEyeWink--;
 
         // Add ambient light and directional light for better 3D effect
         ambientLight(60);
@@ -183,11 +200,17 @@ class MicrobitVisualizer {
         push();
         translate(-30, 0, 0);
         fill(this.EYE_COLOR);
+        
+        // Scale the eye for winking animation
+        const leftEyeScale = this.leftEyeWink > 0 ? 
+            map(this.leftEyeWink, this.WINK_DURATION, 0, 0.1, 1) : 1;
+        scale(1, leftEyeScale, 1);
+        
         sphere(20);
         // Pupil
         translate(0, 0, 15);
         fill(this.PUPIL_COLOR);
-        if (!this.isBlinking) {
+        if (!this.isBlinking && this.leftEyeWink === 0) {
             sphere(10);
         }
         pop();
@@ -196,11 +219,17 @@ class MicrobitVisualizer {
         push();
         translate(30, 0, 0);
         fill(this.EYE_COLOR);
+        
+        // Scale the eye for winking animation
+        const rightEyeScale = this.rightEyeWink > 0 ? 
+            map(this.rightEyeWink, this.WINK_DURATION, 0, 0.1, 1) : 1;
+        scale(1, rightEyeScale, 1);
+        
         sphere(20);
         // Pupil
         translate(0, 0, 15);
         fill(this.PUPIL_COLOR);
-        if (!this.isBlinking) {
+        if (!this.isBlinking && this.rightEyeWink === 0) {
             sphere(10);
         }
         pop();
