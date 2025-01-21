@@ -1,14 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+<head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro:bit Communication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #defaultCanvas0 {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Micro:bit Communication</h1>
+            <p class="text-gray-600">Connect and communicate with your micro:bit device</p>
+        </header>
 
-  </head>
-  <body>
+        <!-- Connection Status -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Connection Status</h2>
+                    <p id="connectionStatus" class="text-red-500">Disconnected</p>
+                </div>
+                <div class="space-x-4">
+                    <button id="connectBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors">
+                        Connect
+                    </button>
+                    <button id="disconnectBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded transition-colors">
+                        Disconnect
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Communication Panel -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Message Display -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Messages</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Sent Message:</label>
+                        <div id="sentMessage" class="p-3 bg-gray-100 rounded-md text-gray-800 min-h-12"></div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Received Message:</label>
+                        <div id="receivedMessage" class="p-3 bg-gray-100 rounded-md text-gray-800 min-h-12"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Messages</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="helloBtn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded transition-colors">
+                        Send "Hello!"
+                    </button>
+                    <button id="byeBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded transition-colors">
+                        Send "Bye!"
+                    </button>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Keyboard Input</h3>
+                    <p class="text-gray-600 text-sm">Press any key to send it to the micro:bit</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../../ubitwebble.js"></script>
-    <script src="sketch.js"></script>
-  </body>
+    <script>
+        let microBit;
+        let messageText = "";
+        let receivedText = "";
+
+        // Update UI elements
+        function updateSentMessage(text) {
+            document.getElementById('sentMessage').textContent = text;
+        }
+
+        function updateReceivedMessage(text) {
+            document.getElementById('receivedMessage').textContent = text;
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (connected) {
+                statusElement.textContent = 'Connected';
+                statusElement.className = 'text-green-500';
+            } else {
+                statusElement.textContent = 'Disconnected';
+                statusElement.className = 'text-red-500';
+            }
+        }
+
+        // Initialize micro:bit communication
+        window.addEventListener('load', function() {
+            microBit = new uBitWebBluetooth();
+
+            microBit.onConnect(function() {
+                console.log("connected");
+                updateConnectionStatus(true);
+            });
+
+            microBit.onDisconnect(function() {
+                console.log("disconnected");
+                updateConnectionStatus(false);
+            });
+
+            microBit.setButtonACallback(function() {
+                console.log("buttonA pressed");
+            });
+
+            microBit.setButtonBCallback(function() {
+                console.log("buttonB pressed");
+            });
+            microBit.onBleNotify(function () {
+                updateConnectionStatus(true);
+            });
+            microBit.setReceiveUARTCallback(function(data) {
+                console.log("UART received", data);
+                receivedText = data;
+                updateReceivedMessage(data);
+            });
+
+            // Button Event Listeners
+            document.getElementById('connectBtn').addEventListener('click', () => {
+                microBit.searchDevice();
+            });
+
+            document.getElementById('disconnectBtn').addEventListener('click', () => {
+                microBit.disconnectDevice();
+            });
+
+            document.getElementById('helloBtn').addEventListener('click', () => {
+                messageText = "Hello!";
+                microBit.writeUARTData(messageText);
+                console.log("Sent message:", messageText);
+                updateSentMessage(messageText);
+            });
+
+            document.getElementById('byeBtn').addEventListener('click', () => {
+                messageText = "Bye!";
+                microBit.writeUARTData(messageText);
+                console.log("Sent message:", messageText);
+                updateSentMessage(messageText);
+            });
+
+            // Keyboard input
+            document.addEventListener('keypress', (event) => {
+                messageText = event.key;
+                microBit.writeUARTData(messageText);
+                console.log("Sent key:", messageText);
+                updateSentMessage(messageText);
+            });
+        });
+    </script>
+</body>
 </html>

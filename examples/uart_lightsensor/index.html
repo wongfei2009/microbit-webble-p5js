@@ -1,15 +1,262 @@
-<!DOCTYPE html><html lang="en"><head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="utf-8">
+    <title>Micro:bit Light Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  </head>
-  <body>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .status-bar {
+            background-color: #f3f4f6;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .status-bar.connected {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-bar.disconnected {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .bulb-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .bulb {
+            width: 120px;
+            height: 120px;
+            transition: filter 0.3s;
+        }
+
+        .glow {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            filter: blur(20px);
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .control-panel {
+            margin-bottom: 1.5rem;
+        }
+
+        .brightness-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #2563eb;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .connect-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .connect-btn:not(:disabled):hover {
+            background: #2563eb;
+        }
+
+        .disconnect-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .disconnect-btn:not(:disabled):hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Micro:bit Light Controller</h1>
+        
+        <div class="status-bar disconnected" id="statusBar">
+            Status: Disconnected
+        </div>
+
+        <div class="bulb-container">
+            <svg class="bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="bulbSvg">
+                <path d="M9 18h6M10 22h4M12 2v1M12 6a6 6 0 00-6 6c0 4 3 5 3 7h6c0-2 3-3 3-7a6 6 0 00-6-6z"/>
+            </svg>
+            <div class="glow" id="bulbGlow"></div>
+        </div>
+
+        <div class="control-panel">
+            <label class="brightness-label">
+                Brightness: <span id="brightnessValue">0</span>
+            </label>
+            <input type="range" min="0" max="255" value="0" class="slider" id="brightnessSlider">
+        </div>
+
+        <div class="button-group">
+            <button class="connect-btn" id="connectBtn">Connect</button>
+            <button class="disconnect-btn" id="disconnectBtn" disabled>Disconnect</button>
+        </div>
+    </div>
+
+    <script>
+        let microBit;
+        let brightness = 0;
+
+        // Elements
+        const statusBar = document.getElementById('statusBar');
+        const bulbSvg = document.getElementById('bulbSvg');
+        const bulbGlow = document.getElementById('bulbGlow');
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        const brightnessValue = document.getElementById('brightnessValue');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+
+        // Initialize micro:bit
+        function initializeMicroBit() {
+            microBit = new uBitWebBluetooth();
+
+            microBit.onConnect(() => {
+                console.log("Connected");
+                updateConnectionStatus(true);
+            });
+
+            microBit.onDisconnect(() => {
+                console.log("Disconnected");
+                updateConnectionStatus(false);
+            });
+
+            microBit.onBleNotify(function () {
+                updateConnectionStatus(true); // Update status when receiving notifications
+            });
+
+            microBit.setReceiveUARTCallback((data) => {
+                brightness = parseInt(data);
+                updateBulbVisualization(brightness);
+                brightnessSlider.value = brightness;
+                brightnessValue.textContent = brightness;
+            });
+        }
+
+        // Add this helper function
+        function updateConnectionStatus(isConnected) {
+            statusBar.textContent = `Status: ${isConnected ? "Connected" : "Disconnected"}`;
+            statusBar.classList.remove(isConnected ? 'disconnected' : 'connected');
+            statusBar.classList.add(isConnected ? 'connected' : 'disconnected');
+            connectBtn.disabled = isConnected;
+            disconnectBtn.disabled = !isConnected;
+        }
+
+        // Update bulb visualization
+        function updateBulbVisualization(value) {
+            const color = `rgb(${255 * value/255}, ${247 * value/255}, ${213 * value/255})`;
+            bulbSvg.style.color = color;
+            bulbGlow.style.backgroundColor = color;
+            bulbGlow.style.opacity = value / 255;
+        }
+
+        // Event Listeners
+        connectBtn.addEventListener('click', () => {
+            microBit.connectDevice();
+        });
+
+        disconnectBtn.addEventListener('click', () => {
+            microBit.disconnectDevice();
+        });
+
+        brightnessSlider.addEventListener('input', (e) => {
+            brightness = parseInt(e.target.value);
+            updateBulbVisualization(brightness);
+            brightnessValue.textContent = brightness;
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initializeMicroBit);
+    </script>
+
     <!-- micro:bit webbluetooth library -->
     <script src="../../ubitwebble.js"></script>
-    
-    <script src="sketch.js"></script>
-  
-
-</body></html>
+</body>
+</html>
