@@ -213,10 +213,13 @@
             });
 
             microBit.setReceiveUARTCallback((data) => {
-                brightness = parseInt(data);
-                updateBulbVisualization(brightness);
-                brightnessSlider.value = brightness;
-                brightnessValue.textContent = brightness;
+                console.log(data);
+                if (data.startsWith("LIGHT:")) {
+                    brightness = parseInt(data.substring(6));
+                    updateBulbVisualization(brightness);
+                    brightnessSlider.value = brightness;
+                    brightnessValue.textContent = brightness;
+                }
             });
         }
 

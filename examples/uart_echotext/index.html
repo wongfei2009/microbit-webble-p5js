@@ -124,9 +124,10 @@
                 updateConnectionStatus(true);
             });
             microBit.setReceiveUARTCallback(function(data) {
-                console.log("UART received", data);
-                receivedText = data;
-                updateReceivedMessage(data);
+                if (data.startsWith("MSG:")) {
+                    receivedText = data.substring(4);
+                    updateReceivedMessage(receivedText);
+                }
             });
 
             // Button Event Listeners
