@@ -140,25 +140,25 @@
             });
 
             document.getElementById('helloBtn').addEventListener('click', () => {
-                messageText = "Hello!";
+                messageText = "MSG:Hello!";  // Add MSG: prefix
                 microBit.writeUARTData(messageText);
                 console.log("Sent message:", messageText);
-                updateSentMessage(messageText);
+                updateSentMessage(messageText.substring(4));  // Remove prefix for display
             });
 
             document.getElementById('byeBtn').addEventListener('click', () => {
-                messageText = "Bye!";
+                messageText = "MSG:Bye!";  // Add MSG: prefix
                 microBit.writeUARTData(messageText);
                 console.log("Sent message:", messageText);
-                updateSentMessage(messageText);
+                updateSentMessage(messageText.substring(4));  // Remove prefix for display
             });
 
             // Keyboard input
             document.addEventListener('keypress', (event) => {
-                messageText = event.key;
+                messageText = "MSG:" + event.key;  // Add MSG: prefix
                 microBit.writeUARTData(messageText);
                 console.log("Sent key:", messageText);
-                updateSentMessage(messageText);
+                updateSentMessage(messageText.substring(4));  // Remove prefix for display
             });
         });
     </script>
