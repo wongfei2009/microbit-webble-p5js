@@ -51,11 +51,11 @@ You can try the examples online or run them locally:
 
 ### Online Demos
 Visit the hosted examples at:
-- https://wongfei2009.github.io/microbit-webble-p5js/examples/basic/
-- https://wongfei2009.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/
-- https://wongfei2009.github.io/microbit-webble-p5js/examples/p5play_example/
-- https://wongfei2009.github.io/microbit-webble-p5js/examples/uart_echotext/
-- https://wongfei2009.github.io/microbit-webble-p5js/examples/uart_lightsensor/
+- [Basic](https://wongfei2009.github.io/microbit-webble-p5js/examples/basic/)
+- [Accelerometer 3D Box](https://wongfei2009.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/)
+- [P5 Play Example](https://wongfei2009.github.io/microbit-webble-p5js/examples/p5play_example/)
+- [Echo Text](https://wongfei2009.github.io/microbit-webble-p5js/examples/uart_echotext/)
+- [Light Sensor](https://wongfei2009.github.io/microbit-webble-p5js/examples/uart_lightsensor/)
 
 ### Running Examples Locally
 
