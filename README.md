@@ -1,8 +1,6 @@
 # ubitwebble.js
 A JavaScript library for interacting with BBC micro:bit using Web Bluetooth API. Control LED matrix, read sensors, and exchange data wirelessly between micro:bit and web browsers.
 
-![lars the iceberg](assets/lars.gif)
-
 ## Installation
 
 1. Download the library:
