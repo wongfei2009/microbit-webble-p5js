@@ -8,7 +8,7 @@ A JavaScript library for interacting with BBC micro:bit using Web Bluetooth API.
 git clone https://github.com/wongfei2009/microbit-webble-p5js.git
 ```
 
-2. Upload [this firmware](https://makecode.microbit.org/_Ts3FVcgFv457) to your micro:bit
+2. Upload [this firmware](https://makecode.microbit.org/S33089-57376-41730-49966) to your micro:bit
 
 3. Include in your project:
 ```html
@@ -45,7 +45,19 @@ const smile = [
 microBit.writeMatrixIcon(smile);
 ```
 
-## Running Examples Locally
+## Running Examples
+
+You can try the examples online or run them locally:
+
+### Online Demos
+Visit the hosted examples at:
+- https://wongfei2009.github.io/microbit-webble-p5js/examples/basic/
+- https://wongfei2009.github.io/microbit-webble-p5js/examples/accelerometer_3Dbox/
+- https://wongfei2009.github.io/microbit-webble-p5js/examples/p5play_example/
+- https://wongfei2009.github.io/microbit-webble-p5js/examples/uart_echotext/
+- https://wongfei2009.github.io/microbit-webble-p5js/examples/uart_lightsensor/
+
+### Running Examples Locally
 
 1. Clone this repository:
    ```sh
