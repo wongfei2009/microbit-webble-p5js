@@ -154,6 +154,30 @@ button:hover {
   background-color: #2980b9;
 }
 
+.midi-control {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.midi-control input[type="file"] {
+  padding: 0.5rem;
+  border: 2px dashed #bdc3c7;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.midi-control textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 0.75rem;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  font-family: monospace;
+  resize: vertical;
+  background-color: #f8f9fa;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -172,3 +196,4 @@ button:hover {
     max-height: none;
   }
 }
+
