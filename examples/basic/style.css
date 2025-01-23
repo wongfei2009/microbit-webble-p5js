@@ -202,6 +202,18 @@ button:hover {
   background-color: white;
 }
 
+.play-button {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #4CAF50;
+}
+
+.play-button:hover {
+  background-color: #45a049;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {

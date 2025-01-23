@@ -27,6 +27,9 @@
                         <div class="music-string">
                             <strong>Music String:</strong>
                             <textarea readonly>${track.musicString}</textarea>
+                            <button onclick="playTrack(${track.tempo}, '${track.musicString}')" class="play-button">
+                                Play on micro:bit
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -34,6 +37,24 @@
         } catch (error) {
             console.error('Error converting MIDI:', error);
             alert('Error converting MIDI file. Please check the console for details.');
+        }
+    };
+    
+    // Function to play track on micro:bit
+    window.playTrack = function(tempo, musicString) {
+        if (!microBit || !microBit.connected) {
+            alert('Please connect to a micro:bit device first!');
+            return;
+        }
+        
+        // Create a message with format "MUSIC:tempo|musicString"
+        const message = `MUSIC:${tempo}|${musicString}`;
+        
+        try {
+            microBit.writeUARTData(message);
+        } catch (error) {
+            console.error('Error sending music data:', error);
+            alert('Error sending music data to micro:bit');
         }
     };
   </script>
