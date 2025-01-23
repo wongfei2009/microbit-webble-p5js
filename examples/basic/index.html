@@ -75,7 +75,7 @@
           await microBit.writeUARTData(message);
 
           // Small delay between chunks to prevent overwhelming the micro:bit
-          await new Promise(resolve => setTimeout(resolve, 50));
+          await new Promise(resolve => setTimeout(resolve, 80));
 
           start = end;
         }
