@@ -48,42 +48,94 @@
         return;
       }
 
-      // Maximum chunk size (in bytes) for UART transmission
-      const MAX_CHUNK_SIZE = 10; 
+      const CHUNK_SIZE = 10; // Increased chunk size
+      const MAX_RETRIES = 3;
+      const ACK_TIMEOUT = 500; // 500ms timeout for acknowledgments
 
       try {
-        // First, send the tempo separately
-        await microBit.writeUARTData(`MUSIC:${tempo}|`);
-        await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure proper reception
+        // Calculate total chunks
+        const totalChunks = Math.ceil(musicString.length / CHUNK_SIZE);
 
-        // Split music string into chunks
-        let start = 0;
-        while (start < musicString.length) {
-          // Calculate end of current chunk
-          let end = start + MAX_CHUNK_SIZE;
-          if (end > musicString.length) {
-            end = musicString.length;
+        // Send initial message with tempo and total chunks
+        await microBit.writeUARTData(`MUSIC_START:${tempo}:${totalChunks}|`);
+
+        // Wait for start acknowledgment
+        const startAck = await waitForAcknowledgment('START', ACK_TIMEOUT);
+        if (!startAck) throw new Error('Failed to get start acknowledgment');
+
+        // Send chunks with retry logic
+        for (let i = 0; i < totalChunks; i++) {
+          let chunk = musicString.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+          let retries = 0;
+          let chunkAcknowledged = false;
+
+          while (!chunkAcknowledged && retries < MAX_RETRIES) {
+            await microBit.writeUARTData(`CHUNK:${i}:${chunk}|`);
+
+            try {
+              await waitForAcknowledgment(i.toString(), ACK_TIMEOUT);
+              chunkAcknowledged = true;
+            } catch (error) {
+              retries++;
+              if (retries >= MAX_RETRIES) {
+                throw new Error(`Failed to send chunk ${i} after ${MAX_RETRIES} attempts`);
+              }
+              await new Promise(resolve => setTimeout(resolve, 100)); // Short delay before retry
+            }
           }
-
-          // Get current chunk
-          const chunk = musicString.substring(start, end);
-
-          // Send chunk
-          // If it's the last chunk, add a special marker
-          const isLastChunk = end === musicString.length;
-          const message = isLastChunk ? `CHUNK:${chunk}|END` : `CHUNK:${chunk}`;
-          await microBit.writeUARTData(message);
-
-          // Small delay between chunks to prevent overwhelming the micro:bit
-          await new Promise(resolve => setTimeout(resolve, 100));
-
-          start = end;
         }
+
+        // Wait for completion confirmation
+        const response = await waitForResponse('COMPLETE', 5000);
+        if (!response) {
+          throw new Error('Did not receive completion confirmation');
+        }
+
+        console.log('Music transmission completed successfully');
+
       } catch (error) {
         console.error('Error sending music data:', error);
-        alert('Error sending music data to micro:bit');
+        alert(`Error sending music data: ${error.message}`);
       }
     };
+
+    // Helper function to wait for acknowledgment
+    function waitForAcknowledgment(expected, timeout) {
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          reject(new Error('Acknowledgment timeout'));
+        }, timeout);
+
+        const handler = (event) => {
+          const data = event.target.value;
+          if (data.includes(`ACK:${expected}`)) {
+            clearTimeout(timer);
+            removeEventListener('characteristicvaluechanged', handler);
+            resolve(true);
+          }
+        };
+
+        addEventListener('characteristicvaluechanged', handler);
+      });
+    }
+
+    // Helper function to wait for specific response
+    function waitForResponse(expected, timeout) {
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(false), timeout);
+
+        const handler = (event) => {
+          const data = event.target.value;
+          if (data.includes(expected)) {
+            clearTimeout(timer);
+            removeEventListener('characteristicvaluechanged', handler);
+            resolve(true);
+          }
+        };
+
+        addEventListener('characteristicvaluechanged', handler);
+      });
+    }
   </script>
 </head>
 
