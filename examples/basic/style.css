@@ -214,6 +214,60 @@ button:hover {
   background-color: #45a049;
 }
 
+.progress-container {
+  display: none;
+  margin-top: 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 2px;
+  position: relative;
+  height: 20px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 12px;
+  font-weight: 600;
+}.progress-container {
+  display: none;
+  margin-top: 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 2px;
+  position: relative;
+  height: 20px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {

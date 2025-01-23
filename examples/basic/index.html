@@ -7,6 +7,7 @@
   <script language="javascript" type="text/javascript" src="../../ubitwebble.js"></script>
   <script language="javascript" type="text/javascript" src="midi-converter.js" type="module"></script>
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
+  <script language="javascript" type="text/javascript" src="music-player.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css" />
 
   <script type="module">
@@ -31,6 +32,10 @@
                             <button onclick="playTrack(${track.tempo}, '${track.musicString}')" class="play-button">
                                 Play on micro:bit
                             </button>
+                            <div class="progress-container">
+                                <div class="progress-bar"></div>
+                                <div class="progress-text">0%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,50 +43,6 @@
       } catch (error) {
         console.error('Error converting MIDI:', error);
         alert('Error converting MIDI file. Please check the console for details.');
-      }
-    };
-
-    // Function to play track on micro:bit
-    window.playTrack = async function (tempo, musicString) {
-      if (!microBit || !microBit.connected) {
-        alert('Please connect to a micro:bit device first!');
-        return;
-      }
-
-      // Maximum chunk size (in bytes) for UART transmission
-      const MAX_CHUNK_SIZE = 10; 
-
-      try {
-        // First, send the tempo separately
-        await microBit.writeUARTData(`MUSIC:${tempo}|`);
-        await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure proper reception
-
-        // Split music string into chunks
-        let start = 0;
-        while (start < musicString.length) {
-          // Calculate end of current chunk
-          let end = start + MAX_CHUNK_SIZE;
-          if (end > musicString.length) {
-            end = musicString.length;
-          }
-
-          // Get current chunk
-          const chunk = musicString.substring(start, end);
-
-          // Send chunk
-          // If it's the last chunk, add a special marker
-          const isLastChunk = end === musicString.length;
-          const message = isLastChunk ? `CHUNK:${chunk}|END` : `CHUNK:${chunk}`;
-          await microBit.writeUARTData(message);
-
-          // Small delay between chunks to prevent overwhelming the micro:bit
-          await new Promise(resolve => setTimeout(resolve, 100));
-
-          start = end;
-        }
-      } catch (error) {
-        console.error('Error sending music data:', error);
-        alert('Error sending music data to micro:bit');
       }
     };
   </script>
