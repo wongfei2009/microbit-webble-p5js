@@ -167,15 +167,39 @@ button:hover {
   cursor: pointer;
 }
 
-.midi-control textarea {
-  width: 100%;
-  min-height: 200px;
-  padding: 0.75rem;
-  border: 2px solid #bdc3c7;
-  border-radius: 6px;
-  font-family: monospace;
-  resize: vertical;
+.track-result {
+  margin: 1rem 0;
+  padding: 1rem;
   background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.track-result h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.music-string {
+  margin-top: 0.5rem;
+}
+
+.music-string textarea {
+  width: 100%;
+  min-height: 60px;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+  background-color: white;
 }
 
 /* Responsive Design */

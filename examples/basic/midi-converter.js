@@ -266,7 +266,11 @@ class MidiToUbit {
 
         // Calculate BPM using the final tempo value
         const bpm = Math.floor(60 * 1000000 * beatdenom / 4 / currentTempo * UBIT_RESOLUTION_MAG);
-        return `music.setTempo(${bpm})\nlet sound: string[] = []\nsound = nerds.stringToNoteArray("${result}")\nnerds.playNoteArray(sound, MelodyOptions.Once)\n`;
+        
+        return {
+            tempo: bpm,
+            musicString: result
+        };
     }
 
     async convert(midiFile) {
@@ -277,7 +281,10 @@ class MidiToUbit {
         for (let i = 0; i < parsed.tracks.length; i++) {
             const track = parsed.tracks[i];
             const converted = this.convertTrackToUbit(track, parsed.header.timeDivision);
-            results.push(converted);
+            results.push({
+                trackNumber: i + 1,
+                ...converted
+            });
         }
         
         return results;
