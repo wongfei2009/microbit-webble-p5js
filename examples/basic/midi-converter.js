@@ -5,7 +5,7 @@ const MIDI_HEADER_LENGTH = 6;
 const UBIT_MIN_TIME = 1;
 const UBIT_NOTES = "c#d#ef#g#a#b";
 const UBIT_RESOLUTION_MAG = 8;
-const DEFAULT_TEMPO = 480;
+const DEFAULT_TEMPO = 500000;
 const DEFAULT_LOW_BEAT = 4;
 
 // MIDI Event Types
@@ -197,16 +197,27 @@ class MidiToUbit {
         this.parser = new MidiParser();
     }
 
-    convertTrackToUbit(track, timebase, tempo = DEFAULT_TEMPO, beatdenom = DEFAULT_LOW_BEAT) {
+    convertTrackToUbit(track, timebase, beatdenom = DEFAULT_LOW_BEAT) {
         const queue = [];
         let deltaTime = 0;
         let result = '';
         let separator = '';
+        let currentTempo = DEFAULT_TEMPO;
+        let lastTempoChange = 0;
+        let currentTime = 0;
 
         for (const element of track) {
             if (typeof element === 'number') {
                 deltaTime += element;
+                currentTime += element;
             } else if (Array.isArray(element)) {
+                // Handle tempo meta events
+                if (element[0] === 'tempo') {
+                    currentTempo = element[1];
+                    lastTempoChange = currentTime;
+                    continue;
+                }
+
                 // Handle note events
                 if (element[0] === MIDI_EVENT_TYPES.NOTE_OFF) {
                     element[0] = MIDI_EVENT_TYPES.NOTE_ON;
@@ -253,8 +264,8 @@ class MidiToUbit {
             result += separator + code;
         }
 
-        // Format the complete output
-        const bpm = Math.floor(60 * 1000000 * beatdenom / 4 / tempo * UBIT_RESOLUTION_MAG);
+        // Calculate BPM using the final tempo value
+        const bpm = Math.floor(60 * 1000000 * beatdenom / 4 / currentTempo * UBIT_RESOLUTION_MAG);
         return `music.setTempo(${bpm})\nlet sound: string[] = []\nsound = nerds.stringToNoteArray("${result}")\nnerds.playNoteArray(sound, MelodyOptions.Once)\n`;
     }
 
