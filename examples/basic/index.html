@@ -45,6 +45,40 @@
         alert('Error converting MIDI file. Please check the console for details.');
       }
     };
+    window.loadSampleMidi = async function (samplePath) {
+      try {
+        const response = await fetch(samplePath);
+        const blob = await response.blob();
+        const file = new File([blob], samplePath.split('/').pop(), { type: 'audio/midi' });
+
+        const converter = new MidiToUbit();
+        const results = await converter.convert(file);
+
+        const trackResults = document.getElementById('trackResults');
+        trackResults.innerHTML = results.map(track => `
+          <div class="track-result">
+            <h4>Track ${track.trackNumber}</h4>
+            <div class="track-info">
+              <div><strong>Tempo:</strong> ${track.tempo} BPM</div>
+              <div class="music-string">
+                <strong>Music String:</strong>
+                <textarea readonly>${track.musicString}</textarea>
+                <button onclick="playTrack(${track.tempo}, '${track.musicString}')" class="play-button">
+                  Play on micro:bit
+                </button>
+                <div class="progress-container">
+                  <div class="progress-bar"></div>
+                  <div class="progress-text">0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading sample MIDI:', error);
+        alert('Error loading sample MIDI file. Please check the console for details.');
+      }
+    }
   </script>
 </head>
 
@@ -151,6 +185,13 @@
       <div class="property">
         <h3>MIDI Converter</h3>
         <div class="midi-control">
+          <div class="property">
+            <h4>Sample Songs</h4>
+            <div class="sample-songs">
+              <button onclick="loadSampleMidi('samples/sample1.mid')">Mountain Climbing</button>
+              <button onclick="loadSampleMidi('samples/sample2.mid')">My Friend</button>
+            </div>
+          </div>
           <input type="file" id="midiFile" accept=".mid,.midi" onchange="handleMidiUpload(event)" />
           <div id="trackResults"></div>
         </div>
