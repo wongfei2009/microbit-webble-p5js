@@ -8,7 +8,7 @@ A JavaScript library for interacting with BBC micro:bit using Web Bluetooth API.
 git clone https://github.com/wongfei2009/microbit-webble-p5js.git
 ```
 
-2. Upload [this firmware](https://makecode.microbit.org/S33089-57376-41730-49966) to your micro:bit
+2. Upload [this firmware](https://makecode.microbit.org/_89u08UepEh76) to your micro:bit
 
 3. Include in your project:
 ```html
